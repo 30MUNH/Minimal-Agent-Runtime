@@ -9,34 +9,34 @@ A lightweight, zero-dependency Python agent runtime featuring a real orchestrati
 
 ---
 
-## 📌 Project Overview
+## Project Overview
 
-**Minimal Agent Runtime** provides a clean, modular reference implementation of an autonomous AI agent control loop. Designed for local execution, deterministic testing, and cloud LLM integration, it demonstrates how autonomous agents process user tasks, dispatch schema-validated tools, maintain state across runs, and record structured execution logs.
-
----
-
-## 🎯 Assignment Goal
-
-The goal of this project is to build a minimal but complete agent runtime from scratch without heavy external agent frameworks (e.g. LangChain, CrewAI). The runtime is designed to:
-- Be fully testable offline without network access or API keys.
-- Enforce strict sandboxing boundaries (workspace-scoped file operations).
-- Provide explicit cross-session memory mechanisms rather than implicit prompt dumps.
-- Include rich human-readable and machine-readable execution tracing.
+**Minimal Agent Runtime** is a clean, modular reference implementation of an agent control loop in Python. Designed for local execution, deterministic testing, and optional LLM integration, it demonstrates how agents process user tasks, dispatch schema-validated tools, maintain state across runs, and record structured execution logs.
 
 ---
 
-## ✨ Features
+## Assignment Goals
 
-- **🔄 Orchestration Loop**: Iterative think-act-observe loop bounded by `max_steps` with graceful error recovery.
-- **🛠️ Generic Tool Interface**: Schema-based tool registration decoupled from runtime logic.
-- **📁 Sandboxed Filesystem Tools**: Restricted to `workspace/` (`list_files`, `read_file`, `write_file`, `search_files`).
-- **💾 Dual Memory System**: Ephemeral in-memory working transcript + persistent JSON key-value store (`remember`, `recall`).
-- **📊 Observability & Tracing**: Real-time console tracing, per-tool millisecond timing, and non-sensitive JSON run logs (`logs/run-XXX.json`).
-- **🧪 100% Offline Testability**: Complete 19-unit test suite executing in under 30ms using `FakeModel`.
+Build a minimal but complete agent runtime from scratch without external frameworks (such as LangChain or CrewAI). The runtime:
+- Runs offline without network access or API keys.
+- Sandboxes file operations strictly within `workspace/`.
+- Manages cross-session memory via explicit key-value tools.
+- Provides step-by-step console tracing and JSON run logs.
 
 ---
 
-## 🏗️ Architecture
+## Key Features
+
+- **Orchestration Loop**: Iterative control loop bounded by `max_steps` with exception recovery.
+- **Generic Tool Interface**: Schema-based tool registration decoupled from runtime logic.
+- **Sandboxed Filesystem Tools**: Restricted to `workspace/` (`list_files`, `read_file`, `write_file`, `search_files`).
+- **Dual Memory System**: In-memory working transcript + persistent JSON key-value store (`remember`, `recall`).
+- **Observability & Tracing**: Console trace rendering, per-tool millisecond timing, and JSON run logs (`logs/run-XXX.json`).
+- **Offline Testability**: 19 unit tests executing in under 30ms via `FakeModel`.
+
+---
+
+## Architecture
 
 ```mermaid
 graph TD
@@ -60,7 +60,7 @@ graph TD
 
 ---
 
-## 📂 Repository Layout
+## Repository Layout
 
 ```text
 .
@@ -107,7 +107,7 @@ graph TD
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
 
 No external dependencies are required for offline verification:
 
@@ -122,7 +122,7 @@ python3 -m unittest discover -s tests -v
 
 ---
 
-## 🧪 Offline Verification
+## Offline Verification
 
 Execute all offline demos without network access:
 
@@ -139,7 +139,7 @@ python3 examples/offline_trace_demo.py
 
 ---
 
-## 🌐 Live Verification (OpenAI API)
+## Live Verification (OpenAI API)
 
 For live model execution using OpenAI:
 
@@ -158,7 +158,7 @@ python3 -m agent_runtime.cli --trace --save-trace --verbose \
 
 ---
 
-## 📊 Execution Trace & JSON Logs
+## Execution Trace & JSON Logs
 
 Add `--trace` to print step-by-step execution details, and `--save-trace` to output audit logs under `logs/`:
 
@@ -180,15 +180,15 @@ Saved trace: logs/run-001.json
 
 ---
 
-## ⚠️ Limitations
+## Limitations
 
 - **Bounded Execution**: Bounded by `max_steps` (default 8/12) to prevent infinite loops.
-- **Single Threaded**: Tool execution runs sequentially within a single thread.
+- **Sequential Execution**: Tool calls execute synchronously in single-threaded mode.
 - **Workspace Scope**: Filesystem operations are strictly sandboxed inside `workspace/`.
 
 ---
 
-## 🔮 Future Improvements
+## Future Improvements
 
 - Parallel tool call execution for independent tool requests.
 - Additional model providers (Anthropic Claude, Ollama local LLMs).
@@ -196,6 +196,6 @@ Saved trace: logs/run-001.json
 
 ---
 
-## 📄 License & Submission Notice
+## Submission Notice
 
-Built for reviewer submission. View the live [Documentation Site](https://minimal-agent-runtime.vercel.app) or read [`SUBMISSION.md`](SUBMISSION.md) for details.
+View the live [Documentation Site](https://minimal-agent-runtime.vercel.app) or read [`SUBMISSION.md`](SUBMISSION.md) for details.

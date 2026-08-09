@@ -4,9 +4,9 @@
 
 ---
 
-## Mission Statement
+## Overview & Objectives
 
-To build a clean, deterministic, dependency-free Python agent runtime that demonstrates the core mechanics of autonomous LLM agents—orchestration, tool-calling, state persistence, and observability—without relying on heavy third-party framework abstractions.
+Build a clean, deterministic, dependency-free Python agent runtime that implements core agent mechanics—orchestration, tool calling, state persistence, and observability—without external framework abstractions.
 
 ---
 
