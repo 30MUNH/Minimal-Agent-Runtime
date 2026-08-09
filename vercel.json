@@ -1,15 +1,6 @@
 {
-  "version": 2,
-  "name": "minimal-agent-runtime-docs",
-  "cleanUrls": true,
+  "framework": null,
+  "buildCommand": null,
   "outputDirectory": "docs-site",
-  "routes": [
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ]
+  "cleanUrls": true
 }
