@@ -1,0 +1,16 @@
+# Security & environment
+.env
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+env/
+venv/
+
+# Runtime artifacts & logs
+.agent-memory.json
+logs/
+workspace/todo-report.md
