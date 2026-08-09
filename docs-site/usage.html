@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usage Guide — Minimal Agent Runtime</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true, theme:'dark'});</script>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">
+        Minimal Agent Runtime <span class="brand-badge">v0.1.0</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="architecture.html">Architecture</a></li>
+        <li><a href="verification.html">Verification</a></li>
+        <li><a href="usage.html" class="active">Usage</a></li>
+        <li><a href="trace.html">Trace</a></li>
+        <li><a href="design.html">Design</a></li>
+        <li>
+          <a href="https://github.com/30MUNH/Minimal-Agent-Runtime" target="_blank" class="btn-github">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub Repo
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <h1>Reviewer Execution Guide</h1>
+    <p>Complete instructions for running unit tests, offline deterministic demos, and live OpenAI agent execution.</p>
+
+    <section class="card">
+      <h2>Path A: Deterministic Offline Path (No API Key Required)</h2>
+      <p>Exercising the agent runtime harness, tool dispatching, memory persistence, and tracing requires zero network access and zero third-party dependencies.</p>
+
+      <h3>1. Run Full Unit Test Suite</h3>
+      <pre><code>python3 -m unittest discover -s tests -v</code></pre>
+
+      <h3>2. Run Offline Multi-Step Task Demo</h3>
+      <pre><code>python3 examples/multi_step_task.py</code></pre>
+
+      <h3>3. Run Offline Workspace TODO Report Generator</h3>
+      <pre><code>python3 examples/offline_todo_report_demo.py</code></pre>
+
+      <h3>4. Run Offline Execution Trace & JSON Logger Demo</h3>
+      <pre><code>python3 examples/offline_trace_demo.py</code></pre>
+    </section>
+
+    <section class="card" style="margin-top: 1.5rem;">
+      <h2>Path B: Live OpenAI Path (Cloud API Execution)</h2>
+      <p>To run real LLM queries using OpenAI models (e.g. <code>gpt-4.1-mini</code>):</p>
+
+      <h3>1. Install Optional Dependencies</h3>
+      <pre><code>python3 -m pip install -e ".[openai]"</code></pre>
+
+      <h3>2. Configure API Key (.env or Environment Variable)</h3>
+      <pre><code># Option 1: Create a .env file (auto-loaded by cli.py)
+echo "OPENAI_API_KEY=sk-proj-your-key" > .env
+
+# Option 2: Export in terminal
+export OPENAI_API_KEY="sk-proj-your-key"</code></pre>
+
+      <h3>3. Seed Reviewer Workspace & Run Task</h3>
+      <pre><code># Seed sample files into workspace/
+python3 examples/seed_workspace.py
+
+# Execute agent task with human trace & JSON logging enabled
+python3 -m agent_runtime.cli --trace --save-trace --verbose \
+  "Inspect the files in the workspace, find all TODO items, create a concise report at todo-report.md, and remember where the report was saved."</code></pre>
+
+      <h3>4. Query Memory Across Fresh Runtime Invocations</h3>
+      <pre><code>python3 -m agent_runtime.cli "Where did you save the TODO report?"</code></pre>
+    </section>
+
+    <section class="card" style="margin-top: 1.5rem;">
+      <h2>CLI Command Line Options</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Flag</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>task</code></td>
+            <td>Positional</td>
+            <td>Required</td>
+            <td>Natural language task prompt for the agent.</td>
+          </tr>
+          <tr>
+            <td><code>--workspace</code></td>
+            <td>Path</td>
+            <td><code>workspace</code></td>
+            <td>Directory root bounded for filesystem tools.</td>
+          </tr>
+          <tr>
+            <td><code>--memory</code></td>
+            <td>File</td>
+            <td><code>.agent-memory.json</code></td>
+            <td>JSON file path for persistent cross-run memory.</td>
+          </tr>
+          <tr>
+            <td><code>--model</code></td>
+            <td>String</td>
+            <td><code>gpt-4.1-mini</code></td>
+            <td>OpenAI model identifier to invoke.</td>
+          </tr>
+          <tr>
+            <td><code>--max-steps</code></td>
+            <td>Integer</td>
+            <td><code>12</code></td>
+            <td>Maximum model-tool iterations allowed.</td>
+          </tr>
+          <tr>
+            <td><code>--trace</code></td>
+            <td>Flag</td>
+            <td>Disabled</td>
+            <td>Print human-readable execution trace to console.</td>
+          </tr>
+          <tr>
+            <td><code>--verbose</code></td>
+            <td>Flag</td>
+            <td>Disabled</td>
+            <td>Include full tool observation outputs in trace.</td>
+          </tr>
+          <tr>
+            <td><code>--save-trace</code></td>
+            <td>Flag</td>
+            <td>Disabled</td>
+            <td>Save structured JSON log file into <code>logs/</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <div class="nav-container">
+      <p>Minimal Agent Runtime Submission Portal &bull; Designed for Vercel & GitHub Pages</p>
+      <p><a href="https://github.com/30MUNH/Minimal-Agent-Runtime" target="_blank">github.com/30MUNH/Minimal-Agent-Runtime</a></p>
+    </div>
+  </footer>
+
+</body>
+</html>

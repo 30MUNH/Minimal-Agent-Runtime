@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
+  <rect width="800" height="400" rx="10" fill="#0d1117" stroke="#30363d" stroke-width="2"/>
+  <rect width="800" height="35" rx="10" fill="#161b22"/>
+  <circle cx="20" cy="18" r="6" fill="#ff5f56"/>
+  <circle cx="40" cy="18" r="6" fill="#ffbd2e"/>
+  <circle cx="60" cy="18" r="6" fill="#27c93f"/>
+  <text x="400" y="22" fill="#8b949e" font-family="monospace" font-size="12" text-anchor="middle">Terminal — python3 examples/offline_trace_demo.py</text>
+  <text x="25" y="65" fill="#79c0ff" font-family="monospace" font-size="13">$ python3 examples/offline_trace_demo.py</text>
+  <text x="25" y="95" fill="#d2a8ff" font-family="monospace" font-size="13">STEP 1: Model invocation</text>
+  <text x="25" y="120" fill="#d2a8ff" font-family="monospace" font-size="13">STEP 2: Model requested tool: search_files {"query": "TODO"}</text>
+  <text x="25" y="145" fill="#3fb950" font-family="monospace" font-size="13">STEP 3: Executed tool: search_files (Status: success, Duration: 1 ms)</text>
+  <text x="25" y="170" fill="#d2a8ff" font-family="monospace" font-size="13">STEP 4: Model requested tool: write_file {"path": "todo-report.md"}</text>
+  <text x="25" y="195" fill="#3fb950" font-family="monospace" font-size="13">STEP 5: Executed tool: write_file (Status: success, Duration: 0 ms)</text>
+  <text x="25" y="220" fill="#58a6ff" font-family="monospace" font-size="13">STEP 6: Final Answer: Report created successfully.</text>
+  <text x="25" y="260" fill="#8b949e" font-family="monospace" font-size="13">Execution Summary -- Steps: 6 | Tools: 2 ok | Total runtime: 1 ms</text>
+  <text x="25" y="295" fill="#79c0ff" font-family="monospace" font-size="13">Saved trace: logs/run-002.json</text>
+  <text x="25" y="355" fill="#3fb950" font-family="monospace" font-size="16">✓ Execution Trace &amp; JSON Audit Logging Verified</text>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
+  <rect width="800" height="400" rx="10" fill="#0d1117" stroke="#30363d" stroke-width="2"/>
+  <rect width="800" height="35" rx="10" fill="#161b22"/>
+  <circle cx="20" cy="18" r="6" fill="#ff5f56"/>
+  <circle cx="40" cy="18" r="6" fill="#ffbd2e"/>
+  <circle cx="60" cy="18" r="6" fill="#27c93f"/>
+  <text x="400" y="22" fill="#8b949e" font-family="monospace" font-size="12" text-anchor="middle">Terminal — python3 -m unittest discover -s tests -v</text>
+  <text x="25" y="70" fill="#79c0ff" font-family="monospace" font-size="14">$ python3 -m unittest discover -s tests -v</text>
+  <text x="25" y="100" fill="#8b949e" font-family="monospace" font-size="13">test_filesystem_write_and_read_are_real ... <tspan fill="#3fb950">ok</tspan></text>
+  <text x="25" y="125" fill="#8b949e" font-family="monospace" font-size="13">test_search_files_finds_matching_lines ... <tspan fill="#3fb950">ok</tspan></text>
+  <text x="25" y="150" fill="#8b949e" font-family="monospace" font-size="13">test_workspace_path_traversal_is_rejected ... <tspan fill="#3fb950">ok</tspan></text>
+  <text x="25" y="175" fill="#8b949e" font-family="monospace" font-size="13">test_memory_persists_values_between_instances ... <tspan fill="#3fb950">ok</tspan></text>
+  <text x="25" y="200" fill="#8b949e" font-family="monospace" font-size="13">test_remember_and_recall_are_explicit_tools ... <tspan fill="#3fb950">ok</tspan></text>
+  <text x="25" y="225" fill="#8b949e" font-family="monospace" font-size="13">test_human_trace_shows_model_tool_execution ... <tspan fill="#3fb950">ok</tspan></text>
+  <text x="25" y="250" fill="#8b949e" font-family="monospace" font-size="13">test_runtime_completes_multi_step_task ... <tspan fill="#3fb950">ok</tspan></text>
+  <text x="25" y="290" fill="#8b949e" font-family="monospace" font-size="14">----------------------------------------------------------------------</text>
+  <text x="25" y="320" fill="#e6edf3" font-family="monospace" font-size="14">Ran 19 tests in 0.024s</text>
+  <text x="25" y="355" fill="#3fb950" font-family="monospace" font-size="18" font-weight="bold">OK (19 Passing Unit Tests)</text>
+</svg>

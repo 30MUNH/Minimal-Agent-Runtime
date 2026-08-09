@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Observability & Tracing — Minimal Agent Runtime</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true, theme:'dark'});</script>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">
+        Minimal Agent Runtime <span class="brand-badge">v0.1.0</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="architecture.html">Architecture</a></li>
+        <li><a href="verification.html">Verification</a></li>
+        <li><a href="usage.html">Usage</a></li>
+        <li><a href="trace.html" class="active">Trace</a></li>
+        <li><a href="design.html">Design</a></li>
+        <li>
+          <a href="https://github.com/30MUNH/Minimal-Agent-Runtime" target="_blank" class="btn-github">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub Repo
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <h1>Execution Tracing & Observability</h1>
+    <p>Understanding why execution tracing exists, how timing metrics work, and how JSON logs accelerate debugging.</p>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">Why Tracing Exists</div>
+        <p>Agents are non-linear state machines. Tracing reveals the exact step-by-step reasoning cycle (Model Prompt &rarr; Tool Call &rarr; Observation) without cluttering console output with raw Python dumps.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Why Timing Exists</div>
+        <p>Millisecond-level timing captures per-tool execution latency. This allows developers to instantly identify bottleneck tools, slow filesystem calls, or hanging API requests.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">JSON Log Auditability</div>
+        <p>Saved JSON logs under <code>logs/run-XXX.json</code> create a permanent, non-sensitive audit trail of agent runs, suitable for offline analysis, regression testing, and metrics tracking.</p>
+      </div>
+    </div>
+
+    <h2>1. Example Human-Readable Execution Trace</h2>
+    <pre><code>STEP 1
+Model invocation
+
+STEP 2
+Model requested tool:
+  search_files
+Arguments:
+  {"query": "TODO"}
+
+STEP 3
+Executed tool:
+  search_files
+Status:
+  success
+Duration:
+  1 ms
+Returned:
+  4 matches
+
+STEP 4
+Model requested tool:
+  write_file
+Arguments:
+  {"path": "todo-report.md", "content": "# TODO Report\n- app.py: validate args"}
+
+STEP 5
+Executed tool:
+  write_file
+Status:
+  success
+Duration:
+  0 ms
+Returned:
+  Wrote 38 bytes to todo-report.md
+
+STEP 6
+Model requested tool:
+  remember
+Arguments:
+  {"key": "todo_report_path", "value": "todo-report.md"}
+
+STEP 7
+Executed tool:
+  remember
+Status:
+  success
+Duration:
+  0 ms
+Returned:
+  Remembered todo_report_path = 'todo-report.md'
+
+STEP 8
+Final Answer
+  Created workspace/todo-report.md and remembered its location.
+Termination reason: final</code></pre>
+
+    <h2>2. Example Metrics Summary</h2>
+    <pre><code>Execution Summary
+
+Steps: 8
+
+Tools:
+- search_files ..... 1 ms (ok)
+- write_file ....... 0 ms (ok)
+- remember ......... 0 ms (ok)
+
+Total runtime:
+3 ms</code></pre>
+
+    <h2>3. Example Structured JSON Log (logs/run-002.json)</h2>
+    <pre><code>{
+  "timestamp": "2026-08-10T00:43:13.123456Z",
+  "task": "Run offline trace demo",
+  "model_provider": "FakeModel",
+  "total_duration_ms": 0,
+  "stopped_reason": "final",
+  "answer": "Trace complete.",
+  "steps": [
+    { "type": "model_invocation", "step": 1 },
+    { "type": "tool_call", "tool": "echo", "args": { "text": "trace me" }, "call_id": "call_1" },
+    { "type": "tool_result", "tool": "echo", "result": "trace me", "duration_ms": 0 },
+    { "type": "model_invocation", "step": 4 },
+    { "type": "final", "content": "Trace complete.", "termination_reason": "final" }
+  ]
+}</code></pre>
+  </main>
+
+  <footer>
+    <div class="nav-container">
+      <p>Minimal Agent Runtime Submission Portal &bull; Designed for Vercel & GitHub Pages</p>
+      <p><a href="https://github.com/30MUNH/Minimal-Agent-Runtime" target="_blank">github.com/30MUNH/Minimal-Agent-Runtime</a></p>
+    </div>
+  </footer>
+
+</body>
+</html>

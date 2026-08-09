@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture — Minimal Agent Runtime</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true, theme:'dark'});</script>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">
+        Minimal Agent Runtime <span class="brand-badge">v0.1.0</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="architecture.html" class="active">Architecture</a></li>
+        <li><a href="verification.html">Verification</a></li>
+        <li><a href="usage.html">Usage</a></li>
+        <li><a href="trace.html">Trace</a></li>
+        <li><a href="design.html">Design</a></li>
+        <li>
+          <a href="https://github.com/30MUNH/Minimal-Agent-Runtime" target="_blank" class="btn-github">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub Repo
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <h1>System Architecture</h1>
+    <p>The Minimal Agent Runtime is organized into modular, loosely-coupled components designed for predictability, sandboxing, and testability.</p>
+
+    <div class="mermaid-container">
+      <div class="mermaid">
+graph TD
+    User["User / Task Input"] --> Runtime["Agent Runtime (AgentRuntime)"]
+    Runtime --> WorkingMem["Working Memory (Run Transcript)"]
+    Runtime --> Model["Model Provider (OpenAI / FakeModel)"]
+    Model -->|ModelReply.final| Response["Final Answer"]
+    Model -->|ModelReply.tool_call| Registry["Tool Registry"]
+    
+    Registry -->|Dispatch| FSTools["Filesystem Tools (sandboxed to workspace/)"]
+    Registry -->|Dispatch| MemTools["Memory Tools (remember / recall)"]
+    
+    MemTools <--> JSONStore[("Persistent Store (.agent-memory.json)")]
+    
+    FSTools --> Observations["Observations (tool_result / tool_error)"]
+    MemTools --> Observations
+    
+    Observations -->|Append to Transcript| WorkingMem
+    WorkingMem -->|Next Step Loop| Model
+      </div>
+    </div>
+
+    <h2>Core Architecture Pipeline</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">1. Agent Runtime Loop</div>
+        <p>The central orchestrator maintains an execution loop up to <code>max_steps</code>. Each iteration passes the accumulated working transcript and tool schemas to the model provider.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">2. Model Provider Interface</div>
+        <p>Abstracted via Python <code>Protocol</code>. Receives messages and schemas, returning a normalized <code>ModelReply</code> (either <code>final</code> answer or structured <code>tool_call</code>).</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">3. Tool Registry & Dispatch</div>
+        <p>A name-indexed dictionary of <code>Tool</code> instances. Validates arguments against JSON schemas and executes handlers without model-specific code branches.</p>
+
+      </div>
+
+      <div class="card">
+        <div class="card-title">4. Observations & Recovery</div>
+        <p>Tool results or caught exceptions are formatted as structured observations (`tool_result` / `tool_error`) and fed back into the transcript for model recovery.</p>
+      </div>
+    </div>
+
+    <h2>Memory Architecture</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Working Memory (Ephemeral)</div>
+        <p>The active message transcript maintained during a single <code>run()</code> call. Stores user prompt, model completions, tool calls, and observations. Discarded upon task completion.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Persistent Memory (Cross-Run)</div>
+        <p>Backed by <code>JsonMemory</code> storing key-value pairs in <code>.agent-memory.json</code>. Explicitly accessed via <code>remember(key, value)</code> and <code>recall(key)</code> tools, surviving process restarts.</p>
+      </div>
+    </div>
+
+    <h2>Observability & Tracing</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Execution Trace</div>
+        <p>Chronological step-by-step array tracking model invocations, tool requests, tool status, execution duration in milliseconds, and final termination reason.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">JSON Run Logs</div>
+        <p>Structured audit logs written to <code>logs/run-XXX.json</code> containing complete execution metadata, timing stats, tool usage counts, and answers without leaking secrets.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="nav-container">
+      <p>Minimal Agent Runtime Submission Portal &bull; Designed for Vercel & GitHub Pages</p>
+      <p><a href="https://github.com/30MUNH/Minimal-Agent-Runtime" target="_blank">github.com/30MUNH/Minimal-Agent-Runtime</a></p>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verification — Minimal Agent Runtime</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true, theme:'dark'});</script>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">
+        Minimal Agent Runtime <span class="brand-badge">v0.1.0</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="architecture.html">Architecture</a></li>
+        <li><a href="verification.html" class="active">Verification</a></li>
+        <li><a href="usage.html">Usage</a></li>
+        <li><a href="trace.html">Trace</a></li>
+        <li><a href="design.html">Design</a></li>
+        <li>
+          <a href="https://github.com/30MUNH/Minimal-Agent-Runtime" target="_blank" class="btn-github">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub Repo
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <h1>Verification Matrix</h1>
+    <p>Honest, transparent status report of all executed tests, offline demos, and optional live capabilities.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Verification Target</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Execution Details / Command</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Unit Test Suite (19/19)</strong></td>
+          <td>Automated Unit Tests</td>
+          <td><span class="badge badge-verified">VERIFIED</span></td>
+          <td><code>python3 -m unittest discover -s tests -v</code> (0.024s)</td>
+        </tr>
+        <tr>
+          <td><strong>Python Syntax & Types</strong></td>
+          <td>Compilation Check</td>
+          <td><span class="badge badge-verified">VERIFIED</span></td>
+          <td>Checked via <code>pyproject.toml</code> & standard library byte compilation.</td>
+        </tr>
+        <tr>
+          <td><strong>Multi-step Task Demo</strong></td>
+          <td>Offline Harness Demo</td>
+          <td><span class="badge badge-verified">VERIFIED</span></td>
+          <td><code>python3 examples/multi_step_task.py</code> (FakeModel multi-step loop).</td>
+        </tr>
+        <tr>
+          <td><strong>TODO Report Demo</strong></td>
+          <td>Offline Workspace Demo</td>
+          <td><span class="badge badge-verified">VERIFIED</span></td>
+          <td><code>python3 examples/offline_todo_report_demo.py</code> (Generates <code>todo-report.md</code>).</td>
+        </tr>
+        <tr>
+          <td><strong>Execution Trace & Log Demo</strong></td>
+          <td>Offline Tracing Demo</td>
+          <td><span class="badge badge-verified">VERIFIED</span></td>
+          <td><code>python3 examples/offline_trace_demo.py</code> (Generates <code>logs/run-002.json</code>).</td>
+        </tr>
+        <tr>
+          <td><strong>.env API Key Auto-loading</strong></td>
+          <td>Runtime CLI Verification</td>
+          <td><span class="badge badge-verified">VERIFIED</span></td>
+          <td>Pure Python <code>_load_dotenv()</code> auto-loads key without extra libraries.</td>
+        </tr>
+        <tr>
+          <td><strong>Production OpenAI Live Call</strong></td>
+          <td>Live Cloud API Call</td>
+          <td><span class="badge badge-unverified">NOT VERIFIED IN CI</span></td>
+          <td>Requires active credit quota on OpenAI API key (tested code path via mock unit tests).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Detailed Verification Reports</h2>
+
+    <div class="card">
+      <div class="card-title">Unit Test Suite (19 Passing Tests)</div>
+      <p>The entire harness, tool registry, memory engine, path traversal boundaries, and observability formatters are covered by unit tests running in under 30 milliseconds.</p>
+      <pre><code>test_filesystem_write_and_read_are_real ... ok
+test_search_files_finds_matching_lines ... ok
+test_workspace_path_traversal_is_rejected ... ok
+test_memory_persists_values_between_instances ... ok
+test_memory_returns_default_for_missing_key ... ok
+test_remember_and_recall_are_explicit_tools_across_instances ... ok
+test_execution_summary_lists_tools_and_total_runtime ... ok
+test_human_trace_shows_model_tool_execution_and_final_answer ... ok
+test_save_run_log_writes_structured_json ... ok
+test_openai_provider_normalizes_text_final_answer ... ok
+test_openai_provider_sends_messages_and_tools_and_normalizes_tool_call ... ok
+test_runtime_completes_multi_step_task_with_tool_and_memory ... ok
+test_runtime_records_tool_exception_as_observation ... ok
+test_runtime_records_unknown_tool_as_observation ... ok
+test_runtime_returns_final_answer_without_tool ... ok
+test_runtime_runs_one_tool_then_final_answer ... ok
+test_runtime_stops_at_step_limit ... ok
+test_tool_requires_mapping_arguments ... ok
+test_tool_runs_handler_with_arguments ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.024s
+
+OK</code></pre>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Offline Workspace Scanner</div>
+        <p>Demonstrates full multi-tool sequence without network calls: searches <code>workspace/</code> for <code>TODO</code>, generates <code>workspace/todo-report.md</code>, and saves the file path to <code>.agent-memory.json</code>.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Execution Trace Output</div>
+        <p>Demonstrates human-readable trace rendering and JSON export to <code>logs/run-002.json</code>, tracking step counts, tool call arguments, execution timing, and final termination reasons.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="nav-container">
+      <p>Minimal Agent Runtime Submission Portal &bull; Designed for Vercel & GitHub Pages</p>
+      <p><a href="https://github.com/30MUNH/Minimal-Agent-Runtime" target="_blank">github.com/30MUNH/Minimal-Agent-Runtime</a></p>
+    </div>
+  </footer>
+
+</body>
+</html>
